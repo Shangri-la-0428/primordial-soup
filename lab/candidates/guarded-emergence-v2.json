@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "id": "guarded-emergence-v2",
+  "summary": "Ontology-convergent guarded profile used as the current promotable reference candidate.",
+  "concept_mapping": {
+    "carrier": "trace",
+    "dimensions": [
+      "risk_posture",
+      "reversibility",
+      "authority_basis"
+    ],
+    "public_surface_change": false,
+    "new_nouns": []
+  },
+  "overrides": {}
+}

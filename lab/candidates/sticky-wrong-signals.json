@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "id": "sticky-wrong-signals",
+  "summary": "Mechanism failure fixture: lets wrong signals outlive verified ones and should fail the mechanism gate.",
+  "concept_mapping": {
+    "carrier": "trace",
+    "dimensions": [
+      "risk_posture"
+    ],
+    "public_surface_change": false,
+    "new_nouns": []
+  },
+  "overrides": {
+    "wrong_signal_decay": 0.98,
+    "verified_signal_decay": 0.64,
+    "promotion_threshold": 1.2,
+    "false_signal_penalty": 0.0
+  }
+}

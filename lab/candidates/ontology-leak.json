@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "id": "ontology-leak",
+  "summary": "Intentional ontology failure fixture: invents an unmappable noun and invalid carrier.",
+  "concept_mapping": {
+    "carrier": "memory-lake",
+    "dimensions": [
+      "risk_posture"
+    ],
+    "public_surface_change": false,
+    "new_nouns": [
+      "cluster"
+    ]
+  },
+  "overrides": {}
+}

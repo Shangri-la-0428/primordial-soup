@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "captured_at": "2026-04-10T00:15:24+00:00",
+  "snapshot_id": "20260410T001524plus0000-2",
+  "capture_label": "repair-window",
+  "capture_note": "first labeled repair window",
+  "capture_origin": "manual-guided",
+  "baseline_refs": {
+    "harness.control": "lab/baselines/archive/20260410T001524plus0000-2/harness.control.json",
+    "psyche.probe": "lab/baselines/archive/20260410T001524plus0000-2/psyche.probe.json",
+    "thronglets.eval-emergence": "lab/baselines/archive/20260410T001524plus0000-2/thronglets.eval-emergence.json"
+  },
+  "boundary_contract": {
+    "identity_primitives": [
+      "principal",
+      "account",
+      "delegate",
+      "session"
+    ],
+    "shared_carriers": [
+      "trace",
+      "signal",
+      "policy",
+      "view"
+    ],
+    "control_dimensions": [
+      "scope",
+      "reversibility",
+      "authority_basis",
+      "corroboration_scope",
+      "risk_posture"
+    ],
+    "signal_kinds": [
+      "recommend",
+      "avoid",
+      "watch",
+      "info"
+    ],
+    "trace_taxonomy": [
+      "coordination",
+      "continuity",
+      "calibration"
+    ],
+    "evidence_states": [
+      "stable-path",
+      "mixed-residue"
+    ],
+    "layer_roles": {
+      "Psyche": "private-subjective-continuity",
+      "Thronglets": "shared-sparse-environment",
+      "Oasyce": "low-frequency-authorization-commitment-settlement"
+    },
+    "external_continuity_version": 1
+  },
+  "stack_signals": {
+    "psyche": {
+      "boundary_delta": 0.0,
+      "prediction_error": 0.04342029648800937,
+      "trajectory_kind": null,
+      "issue_count": 0
+    },
+    "thronglets": {
+      "false_signal_pressure": 0.0,
+      "cross_space_contamination_rate": 0.0,
+      "recoverable_spaces_24h": 0,
+      "active_spaces_24h": 0,
+      "substrate_activity": "quiet"
+    }
+  },
+  "protocol_eval": {
+    "recommended_labels": [
+      "quiet-baseline"
+    ],
+    "label_support": {
+      "quiet-baseline": true,
+      "continuity-stress": false,
+      "contamination-spike": false,
+      "repair-window": false
+    },
+    "selected_label": "repair-window",
+    "selected_label_supported": false,
+    "reasons": [
+      "quiet-baseline supported by low boundary fragility and low contamination axes"
+    ],
+    "blocking_reasons": [
+      "selected label 'repair-window' is not supported by current replay protocol evaluation"
+    ]
+  },
+  "contract_checks": {
+    "passed": true,
+    "failures": []
+  }
+}

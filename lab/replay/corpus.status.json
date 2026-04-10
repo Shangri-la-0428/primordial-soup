@@ -1,0 +1,45 @@
+{
+  "captured_at": "2026-04-10T00:36:39+00:00",
+  "archive_count": 14,
+  "label_counts": {
+    "quiet-baseline": 0,
+    "continuity-stress": 1,
+    "contamination-spike": 2,
+    "repair-window": 1,
+    "unlabeled": 1
+  },
+  "latest_by_label": {
+    "contamination-spike": "lab/baselines/archive/20260410T003628plus0000/index.json",
+    "unlabeled": "lab/baselines/archive/20260410T001524plus0000/index.json",
+    "repair-window": "lab/baselines/archive/20260410T001524plus0000-2/index.json",
+    "continuity-stress": "lab/baselines/archive/20260410T001543plus0000/index.json"
+  },
+  "missing_labels": [
+    "quiet-baseline"
+  ],
+  "unsupported_labels": [
+    "continuity-stress",
+    "repair-window"
+  ],
+  "fallback_windows": [
+    "quiet-baseline"
+  ],
+  "protocol_mismatches": [
+    "selected label 'continuity-stress' is not supported by current replay protocol evaluation",
+    "selected label 'repair-window' is not supported by current replay protocol evaluation"
+  ],
+  "replay_ready": false,
+  "blocking_reasons": [
+    "missing labeled replay windows: quiet-baseline",
+    "labeled replay windows not supported by protocol: continuity-stress, repair-window",
+    "selected label 'continuity-stress' is not supported by current replay protocol evaluation",
+    "selected label 'repair-window' is not supported by current replay protocol evaluation",
+    "quiet-baseline selected by heuristic fallback because no labeled snapshot exists"
+  ],
+  "diversity_score": 0.32,
+  "next_recommended_label": "quiet-baseline",
+  "heuristic_fallback_windows": [
+    "quiet-baseline"
+  ],
+  "schema_version": 1
+}

@@ -1,0 +1,18 @@
+{
+  "profile_id": "read-only-calibration-v1-20260410T003639+0000",
+  "captured_at": "2026-04-10T00:36:39+00:00",
+  "baseline_refs": {
+    "harness.control": "lab/baselines/harness.control.json",
+    "psyche.probe": "lab/baselines/psyche.probe.json",
+    "thronglets.eval-emergence": "lab/baselines/thronglets.eval-emergence.json"
+  },
+  "axes": {
+    "boundary_fragility": 0.0145,
+    "false_signal_stickiness": 1.0,
+    "cross_space_leach": 0.0,
+    "repair_capacity": 0.0,
+    "continuity_health": 0.8
+  },
+  "harness_overrides": {},
+  "schema_version": 1
+}

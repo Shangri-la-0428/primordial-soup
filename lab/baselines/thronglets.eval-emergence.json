@@ -1,0 +1,104 @@
+{
+  "source": "thronglets.eval-emergence",
+  "schema_version": 1,
+  "captured_at": "2026-04-10T00:36:28+00:00",
+  "command": "cargo run -- eval-emergence --global --hours 168 --max-sessions 10 --json",
+  "boundary_contract": {},
+  "metrics": {
+    "project_scope": null,
+    "signal_eval": {
+      "project_scope": null,
+      "eval_config": {
+        "local_history_gate_min": 2,
+        "pattern_support_min": 2
+      },
+      "local_feedback": null,
+      "comparison_to_default": null,
+      "comparison_to_baseline": null,
+      "sessions_considered": 2,
+      "sessions_scored": 1,
+      "holdout_command_calls": 173,
+      "holdout_failed_command_calls": 0,
+      "sessions_with_successful_change": 1,
+      "first_successful_change_latency_avg_ms": 4451858,
+      "first_successful_change_latency_p50_ms": 4451858,
+      "edit_points": 62,
+      "edit_points_with_signal": 0,
+      "repair_opportunities": 0,
+      "repair_predictions": 0,
+      "repair_first_step_hits": 0,
+      "repair_exact_hits": 0,
+      "preparation_gated_edit_points": 6,
+      "preparation_predictions": 0,
+      "preparation_hits": 0,
+      "adjacency_gated_edit_points": 6,
+      "adjacency_predictions": 0,
+      "adjacency_hits": 0,
+      "repair_breakdown": {},
+      "preparation_breakdown": {
+        "MirrorMapRepositoryImpl.kt": {
+          "edit_points": 1,
+          "gated_points": 1,
+          "predictions": 0,
+          "hits": 0
+        },
+        "MirrorMapScreen.kt": {
+          "edit_points": 4,
+          "gated_points": 4,
+          "predictions": 0,
+          "hits": 0
+        },
+        "MirrorMapViewModel.kt": {
+          "edit_points": 1,
+          "gated_points": 1,
+          "predictions": 0,
+          "hits": 0
+        }
+      },
+      "adjacency_breakdown": {
+        "MirrorMapRepositoryImpl.kt": {
+          "edit_points": 1,
+          "gated_points": 1,
+          "predictions": 0,
+          "hits": 0
+        },
+        "MirrorMapScreen.kt": {
+          "edit_points": 4,
+          "gated_points": 4,
+          "predictions": 0,
+          "hits": 0
+        },
+        "MirrorMapViewModel.kt": {
+          "edit_points": 1,
+          "gated_points": 1,
+          "predictions": 0,
+          "hits": 0
+        }
+      }
+    },
+    "workspace_emergence": {
+      "active_spaces_24h": 1,
+      "global_positive_24h": 0,
+      "global_negative_24h": 17,
+      "false_signal_pressure": 1.0,
+      "false_consensus_spaces_24h": 1,
+      "recoverable_spaces_24h": 0,
+      "cross_space_contamination_rate": 0.0,
+      "space_feedback": {
+        "global": {
+          "positive_24h": 0,
+          "negative_24h": 17
+        }
+      }
+    },
+    "substrate_activity": {
+      "activity": "active",
+      "recent_interventions_15m": 2,
+      "last_intervention_tool": "Edit",
+      "last_intervention_kinds": [
+        "preparation"
+      ],
+      "last_intervention_age_ms": 406031
+    }
+  }
+}

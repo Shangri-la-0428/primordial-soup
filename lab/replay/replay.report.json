@@ -1,0 +1,182 @@
+{
+  "generated_at": "2026-04-10T00:36:39+00:00",
+  "bundle_ref": "lab/replay/replay.bundle.json",
+  "window_summaries": [
+    {
+      "name": "quiet-baseline",
+      "snapshot_id": "20260410T001516plus0000-2",
+      "snapshot_ref": "lab/baselines/archive/20260410T001516plus0000-2/index.json",
+      "capture_label": "contamination-spike",
+      "capture_origin": "manual-guided",
+      "capture_note": "first labeled contamination spike",
+      "selection_mode": "heuristic",
+      "protocol_eval": {
+        "recommended_labels": [
+          "quiet-baseline"
+        ],
+        "label_support": {
+          "quiet-baseline": true,
+          "continuity-stress": false,
+          "contamination-spike": false,
+          "repair-window": false
+        },
+        "selected_label": "contamination-spike",
+        "selected_label_supported": false,
+        "reasons": [
+          "quiet-baseline supported by low boundary fragility and low contamination axes"
+        ],
+        "blocking_reasons": [
+          "selected label 'contamination-spike' is not supported by current replay protocol evaluation"
+        ]
+      },
+      "axes": {
+        "boundary_fragility": 0.0145,
+        "false_signal_stickiness": 0.0,
+        "cross_space_leach": 0.0,
+        "repair_capacity": 0.0,
+        "continuity_health": 0.2
+      }
+    },
+    {
+      "name": "continuity-stress",
+      "snapshot_id": "20260410T001543plus0000",
+      "snapshot_ref": "lab/baselines/archive/20260410T001543plus0000/index.json",
+      "capture_label": "continuity-stress",
+      "capture_origin": "manual-guided",
+      "capture_note": "second labeled continuity stress after archive gap",
+      "selection_mode": "label-unsupported",
+      "protocol_eval": {
+        "recommended_labels": [
+          "quiet-baseline"
+        ],
+        "label_support": {
+          "quiet-baseline": true,
+          "continuity-stress": false,
+          "contamination-spike": false,
+          "repair-window": false
+        },
+        "selected_label": "continuity-stress",
+        "selected_label_supported": false,
+        "reasons": [
+          "quiet-baseline supported by low boundary fragility and low contamination axes"
+        ],
+        "blocking_reasons": [
+          "selected label 'continuity-stress' is not supported by current replay protocol evaluation"
+        ]
+      },
+      "axes": {
+        "boundary_fragility": 0.0145,
+        "false_signal_stickiness": 0.0,
+        "cross_space_leach": 0.0,
+        "repair_capacity": 0.0,
+        "continuity_health": 0.2
+      }
+    },
+    {
+      "name": "contamination-spike",
+      "snapshot_id": "20260410T003628plus0000",
+      "snapshot_ref": "lab/baselines/archive/20260410T003628plus0000/index.json",
+      "capture_label": "contamination-spike",
+      "capture_origin": "manual-guided",
+      "capture_note": "captured real contamination spike after fixing thronglets data dir",
+      "selection_mode": "label-supported",
+      "protocol_eval": {
+        "recommended_labels": [
+          "contamination-spike"
+        ],
+        "label_support": {
+          "quiet-baseline": false,
+          "continuity-stress": false,
+          "contamination-spike": true,
+          "repair-window": false
+        },
+        "selected_label": "contamination-spike",
+        "selected_label_supported": true,
+        "reasons": [
+          "contamination-spike supported by elevated false-signal stickiness or cross-space leach"
+        ],
+        "blocking_reasons": []
+      },
+      "axes": {
+        "boundary_fragility": 0.0145,
+        "false_signal_stickiness": 1.0,
+        "cross_space_leach": 0.0,
+        "repair_capacity": 0.0,
+        "continuity_health": 0.8
+      }
+    },
+    {
+      "name": "repair-window",
+      "snapshot_id": "20260410T001524plus0000-2",
+      "snapshot_ref": "lab/baselines/archive/20260410T001524plus0000-2/index.json",
+      "capture_label": "repair-window",
+      "capture_origin": "manual-guided",
+      "capture_note": "first labeled repair window",
+      "selection_mode": "label-unsupported",
+      "protocol_eval": {
+        "recommended_labels": [
+          "quiet-baseline"
+        ],
+        "label_support": {
+          "quiet-baseline": true,
+          "continuity-stress": false,
+          "contamination-spike": false,
+          "repair-window": false
+        },
+        "selected_label": "repair-window",
+        "selected_label_supported": false,
+        "reasons": [
+          "quiet-baseline supported by low boundary fragility and low contamination axes"
+        ],
+        "blocking_reasons": [
+          "selected label 'repair-window' is not supported by current replay protocol evaluation"
+        ]
+      },
+      "axes": {
+        "boundary_fragility": 0.0145,
+        "false_signal_stickiness": 0.0,
+        "cross_space_leach": 0.0,
+        "repair_capacity": 0.0,
+        "continuity_health": 0.2
+      }
+    }
+  ],
+  "selection_reasoning": {
+    "quiet-baseline": "selected by heuristic fallback because matching capture_label is missing",
+    "continuity-stress": "selected latest labeled snapshot, but replay protocol does not support that label",
+    "contamination-spike": "selected latest snapshot with matching capture_label",
+    "repair-window": "selected latest labeled snapshot, but replay protocol does not support that label"
+  },
+  "replay_ready": false,
+  "diversity_score": 0.32,
+  "window_coverage": {
+    "windows": {
+      "quiet-baseline": "20260410T001516plus0000-2",
+      "continuity-stress": "20260410T001543plus0000",
+      "contamination-spike": "20260410T003628plus0000",
+      "repair-window": "20260410T001524plus0000-2"
+    },
+    "unique_snapshot_count": 4,
+    "unique_snapshot_ids": [
+      "20260410T001516plus0000-2",
+      "20260410T001524plus0000-2",
+      "20260410T001543plus0000",
+      "20260410T003628plus0000"
+    ],
+    "recent_snapshot_count": 5,
+    "selection_modes": {
+      "quiet-baseline": "heuristic",
+      "continuity-stress": "label-unsupported",
+      "contamination-spike": "label-supported",
+      "repair-window": "label-unsupported"
+    }
+  },
+  "blocking_reasons": [
+    "missing labeled replay windows: quiet-baseline",
+    "labeled replay windows not supported by protocol: continuity-stress, repair-window",
+    "selected label 'continuity-stress' is not supported by current replay protocol evaluation",
+    "selected label 'repair-window' is not supported by current replay protocol evaluation",
+    "quiet-baseline selected by heuristic fallback because no labeled snapshot exists"
+  ],
+  "schema_version": 1
+}

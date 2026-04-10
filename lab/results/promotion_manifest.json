@@ -1,0 +1,41 @@
+{
+  "generated_at": "2026-04-10T00:36:39+00:00",
+  "baseline_refs": {
+    "harness.control": "lab/baselines/harness.control.json",
+    "psyche.probe": "lab/baselines/psyche.probe.json",
+    "thronglets.eval-emergence": "lab/baselines/thronglets.eval-emergence.json"
+  },
+  "evaluated_candidates": [
+    {
+      "candidate_id": "guarded-emergence-v2",
+      "result_ref": "lab/results/guarded-emergence-v2.json",
+      "promotable": false
+    },
+    {
+      "candidate_id": "ontology-leak",
+      "result_ref": "lab/results/ontology-leak.json",
+      "promotable": false
+    },
+    {
+      "candidate_id": "sticky-wrong-signals",
+      "result_ref": "lab/results/sticky-wrong-signals.json",
+      "promotable": false
+    }
+  ],
+  "promotable_candidates": [],
+  "calibration_profile_ref": "lab/baselines/calibration.profile.json",
+  "baseline_snapshot_ref": "lab/baselines/index.json",
+  "gated_under_calibration": true,
+  "replay_bundle_ref": "lab/replay/replay.bundle.json",
+  "replay_ready": false,
+  "replay_blocking_reasons": [
+    "missing labeled replay windows: quiet-baseline",
+    "labeled replay windows not supported by protocol: continuity-stress, repair-window",
+    "selected label 'continuity-stress' is not supported by current replay protocol evaluation",
+    "selected label 'repair-window' is not supported by current replay protocol evaluation",
+    "quiet-baseline selected by heuristic fallback because no labeled snapshot exists"
+  ],
+  "latest_snapshot_ref": "lab/baselines/index.json",
+  "gated_under_replay": true,
+  "schema_version": 1
+}

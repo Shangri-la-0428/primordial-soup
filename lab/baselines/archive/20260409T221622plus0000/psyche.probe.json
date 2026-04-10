@@ -1,0 +1,59 @@
+{
+  "source": "psyche.probe",
+  "schema_version": 1,
+  "captured_at": "2026-04-09T22:16:22+00:00",
+  "command": "npm run probe",
+  "boundary_contract": {
+    "identity_primitives": [
+      "principal",
+      "account",
+      "delegate",
+      "session"
+    ],
+    "signal_kinds": [
+      "recommend",
+      "avoid",
+      "watch",
+      "info"
+    ],
+    "trace_taxonomy": [
+      "coordination",
+      "continuity",
+      "calibration"
+    ],
+    "external_continuity_version": 1,
+    "external_continuity_provider": "thronglets",
+    "external_continuity_mode": "optional"
+  },
+  "metrics": {
+    "ok": true,
+    "canonical_host_surface": true,
+    "external_continuity_available": true,
+    "overlay": {
+      "arousal": 0.01913361920000008,
+      "valence": 0.07302095199999997,
+      "agency": 0.029366387200000024,
+      "vulnerability": -0.02491596159999995
+    },
+    "trajectory": {
+      "kind": null,
+      "dimensions": [],
+      "magnitude": 0,
+      "description": null
+    },
+    "degradation": {
+      "subjectiveStatus": "healthy",
+      "delegateStatus": "healthy",
+      "chemistryDeviation": 10.972893599999999,
+      "predictionError": 0.04342029648800937,
+      "issueCount": 0
+    },
+    "boundary_stress": {
+      "currentBoundary": 55,
+      "baselineBoundary": 55,
+      "boundaryDelta": 0,
+      "peakDyadicBoundaryPressure": 0.21999999999999997,
+      "activeDyadicRelations": 1
+    }
+  }
+}

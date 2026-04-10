@@ -21,6 +21,8 @@ from dataclasses import dataclass, field, asdict
 from pathlib import Path
 from typing import Protocol, Any
 
+from model_lane import LLMConfig, get_transport_adapter
+
 
 # ════════════════════════════════════════════════════════════════
 #  Genome — unit of heredity
@@ -629,22 +631,20 @@ VALID_ACTIONS = {"SEARCH", "HARVEST", "FORK", "BOND", "SIGNAL", "REST"}
 _JSON_BLOCK = re.compile(r"```(?:json)?\s*(.*?)\s*```", re.DOTALL)
 
 
-@dataclass
-class LLMConfig:
-    api_url: str = "https://api.lkeap.cloud.tencent.com/plan/anthropic/v1/messages"
-    api_key: str = ""
-    model: str = "kimi-k2.5"
-    max_tokens: int = 40
-    max_workers: int = 20
-
-
 class LLMEngine:
     """LLM replaces the rule engine. Genome/psyche/perception → prompt → action."""
 
-    def __init__(self, config: LLMConfig, fallback: RuleEngine | None = None):
+    def __init__(
+        self,
+        config: LLMConfig,
+        fallback: RuleEngine | None = None,
+        urlopen_fn: Any | None = None,
+    ):
         self.config = config
+        self.transport = get_transport_adapter(config.transport)
         self.fallback = fallback or RuleEngine()
         self._pool = ThreadPoolExecutor(max_workers=config.max_workers)
+        self._urlopen = urlopen_fn or urllib.request.urlopen
         self._stats = {"calls": 0, "fallbacks": 0, "errors": 0}
 
     # ── Single-cell prompt ──
@@ -724,22 +724,13 @@ class LLMEngine:
     # ── API call ──
 
     def _call_api(self, prompt: str) -> str | None:
-        body = json.dumps({
-            "model": self.config.model,
-            "messages": [{"role": "user", "content": prompt}],
-            "max_tokens": self.config.max_tokens,
-        }).encode()
-        headers = {
-            "x-api-key": self.config.api_key,
-            "anthropic-version": "2023-06-01",
-            "Content-Type": "application/json",
-        }
         try:
-            req = urllib.request.Request(self.config.api_url, body, headers)
-            resp = urllib.request.urlopen(req, timeout=15)
-            d = json.loads(resp.read())
-            return d["content"][0].get("text", "")
+            req = self.transport.build_request(self.config, prompt)
+            resp = self._urlopen(req, timeout=15)
+            payload = json.loads(resp.read())
+            return self.transport.parse_response(payload)
         except Exception:
+            self._stats["errors"] += 1
             return None
 
     # ── Single decide (called per cell) ──
@@ -784,9 +775,15 @@ class LLMEngine:
         return results  # type: ignore
 
     def print_stats(self) -> None:
-        c, f = self._stats["calls"], self._stats["fallbacks"]
+        c, f, e = self._stats["calls"], self._stats["fallbacks"], self._stats["errors"]
         pct = f / c * 100 if c else 0
-        print(f"  LLM stats: {c} calls, {f} fallbacks ({pct:.1f}%)")
+        print(f"  LLM stats: {c} calls, {f} fallbacks ({pct:.1f}%), {e} errors")
+
+    def stats(self) -> dict[str, int]:
+        return dict(self._stats)
+
+    def close(self) -> None:
+        self._pool.shutdown(wait=True)
 
 
 # ════════════════════════════════════════════════════════════════
@@ -1036,6 +1033,8 @@ class SimConfig:
     print_every: int = 50
     seed: int = 42
     data_dir: str = "data"
+    mode_name: str = "rule"
+    output_name: str | None = None
     ablate_psyche: bool = False  # fix Psyche at baseline (50,50,50,50)
 
 
@@ -1318,10 +1317,14 @@ class Simulation:
         return ((cx + dx) % self.env.width, (cy + dy) % self.env.height)
 
     def run(self) -> None:
-        mode = "hybrid" if self.llm_engine else "rule"
+        mode = self.config.mode_name
         model_info = ""
         if self.llm_engine:
-            model_info = f", model={self.llm_engine.config.model}"
+            model_info = (
+                f", profile={self.llm_engine.config.profile_id}"
+                f", transport={self.llm_engine.config.transport}"
+                f", model={self.llm_engine.config.model}"
+            )
         print(f"Primordial Soup — {self.config.initial_population} cells, "
               f"{self.config.width}x{self.config.height} grid, "
               f"seed={self.config.seed}, mode={mode}{model_info}")
@@ -1331,49 +1334,53 @@ class Simulation:
         # In hybrid mode, seed() is called externally with brain tags
         if not self.cells:
             self.seed(self.config.initial_population)
+        try:
+            for t in range(self.config.ticks):
+                # Environmental shocks
+                tick_num = t + 1
+                if tick_num in self.shocks:
+                    shock = self.shocks[tick_num]
+                    if shock == "relocate":
+                        print(f"\n  *** SHOCK at tick {tick_num}: resources relocated ***")
+                        self.env.shock_relocate()
+                    elif shock == "famine":
+                        dur = 50
+                        self._famine_until = tick_num + dur
+                        self.env.resources.clear()
+                        self.env.deposits.clear()
+                        print(f"\n  *** SHOCK at tick {tick_num}: FAMINE for {dur} ticks (no spawning until {self._famine_until}) ***")
+                    elif shock == "wipe_traces":
+                        print(f"\n  *** SHOCK at tick {tick_num}: all traces wiped ***")
+                        self.env.signals.clear()
+                    elif shock == "famine+wipe":
+                        dur = 50
+                        self._famine_until = tick_num + dur
+                        self.env.resources.clear()
+                        self.env.deposits.clear()
+                        self.env.signals.clear()
+                        print(f"\n  *** SHOCK at tick {tick_num}: FAMINE + TRACES WIPED ***")
 
-        for t in range(self.config.ticks):
-            # Environmental shocks
-            tick_num = t + 1
-            if tick_num in self.shocks:
-                shock = self.shocks[tick_num]
-                if shock == "relocate":
-                    print(f"\n  *** SHOCK at tick {tick_num}: resources relocated ***")
-                    self.env.shock_relocate()
-                elif shock == "famine":
-                    dur = 50
-                    self._famine_until = tick_num + dur
-                    self.env.resources.clear()
-                    self.env.deposits.clear()
-                    print(f"\n  *** SHOCK at tick {tick_num}: FAMINE for {dur} ticks (no spawning until {self._famine_until}) ***")
-                elif shock == "wipe_traces":
-                    print(f"\n  *** SHOCK at tick {tick_num}: all traces wiped ***")
-                    self.env.signals.clear()
-                elif shock == "famine+wipe":
-                    dur = 50
-                    self._famine_until = tick_num + dur
-                    self.env.resources.clear()
-                    self.env.deposits.clear()
-                    self.env.signals.clear()
-                    print(f"\n  *** SHOCK at tick {tick_num}: FAMINE + TRACES WIPED ***")
+                self.tick()
 
-            self.tick()
+                if self.observer.history and t % self.config.print_every == 0:
+                    self.observer.print_tick(self.observer.history[-1])
 
-            if self.observer.history and t % self.config.print_every == 0:
+                if not self.cells:
+                    print(f"\n  *** EXTINCTION at tick {self.tick_count} ***")
+                    break
+
+            # Final report
+            if self.observer.history:
                 self.observer.print_tick(self.observer.history[-1])
+            self.observer.print_report()
+            if self.llm_engine:
+                self.llm_engine.print_stats()
 
-            if not self.cells:
-                print(f"\n  *** EXTINCTION at tick {self.tick_count} ***")
-                break
-
-        # Final report
-        if self.observer.history:
-            self.observer.print_tick(self.observer.history[-1])
-        self.observer.print_report()
-        if self.llm_engine:
-            self.llm_engine.print_stats()
-
-        # Save history
-        data_dir = Path(self.config.data_dir)
-        data_dir.mkdir(exist_ok=True)
-        self.observer.save(data_dir / f"run_{mode}_seed{self.config.seed}.json")
+            # Save history
+            data_dir = Path(self.config.data_dir)
+            data_dir.mkdir(parents=True, exist_ok=True)
+            output_name = self.config.output_name or f"run_{mode}_seed{self.config.seed}.json"
+            self.observer.save(data_dir / output_name)
+        finally:
+            if self.llm_engine:
+                self.llm_engine.close()

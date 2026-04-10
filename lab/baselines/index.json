@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "captured_at": "2026-04-10T00:36:28+00:00",
+  "latest_snapshot_id": "20260410T003628plus0000",
+  "capture_label": "contamination-spike",
+  "capture_note": "captured real contamination spike after fixing thronglets data dir",
+  "capture_origin": "manual-guided",
+  "baseline_refs": {
+    "harness.control": "lab/baselines/harness.control.json",
+    "psyche.probe": "lab/baselines/psyche.probe.json",
+    "thronglets.eval-emergence": "lab/baselines/thronglets.eval-emergence.json"
+  },
+  "archive_refs": {
+    "20260409T195030plus0000": "lab/baselines/archive/20260409T195030plus0000/index.json",
+    "20260409T195030plus0000-2": "lab/baselines/archive/20260409T195030plus0000-2/index.json",
+    "20260409T195030plus0000-3": "lab/baselines/archive/20260409T195030plus0000-3/index.json",
+    "20260409T221622plus0000": "lab/baselines/archive/20260409T221622plus0000/index.json",
+    "20260409T223209plus0000": "lab/baselines/archive/20260409T223209plus0000/index.json",
+    "20260409T232735plus0000": "lab/baselines/archive/20260409T232735plus0000/index.json",
+    "20260410T000008plus0000": "lab/baselines/archive/20260410T000008plus0000/index.json",
+    "20260410T001009plus0000": "lab/baselines/archive/20260410T001009plus0000/index.json",
+    "20260410T001516plus0000": "lab/baselines/archive/20260410T001516plus0000/index.json",
+    "20260410T001516plus0000-2": "lab/baselines/archive/20260410T001516plus0000-2/index.json",
+    "20260410T001524plus0000": "lab/baselines/archive/20260410T001524plus0000/index.json",
+    "20260410T001524plus0000-2": "lab/baselines/archive/20260410T001524plus0000-2/index.json",
+    "20260410T001543plus0000": "lab/baselines/archive/20260410T001543plus0000/index.json",
+    "20260410T003628plus0000": "lab/baselines/archive/20260410T003628plus0000/index.json"
+  },
+  "boundary_contract": {
+    "identity_primitives": [
+      "principal",
+      "account",
+      "delegate",
+      "session"
+    ],
+    "shared_carriers": [
+      "trace",
+      "signal",
+      "policy",
+      "view"
+    ],
+    "control_dimensions": [
+      "scope",
+      "reversibility",
+      "authority_basis",
+      "corroboration_scope",
+      "risk_posture"
+    ],
+    "signal_kinds": [
+      "recommend",
+      "avoid",
+      "watch",
+      "info"
+    ],
+    "trace_taxonomy": [
+      "coordination",
+      "continuity",
+      "calibration"
+    ],
+    "evidence_states": [
+      "stable-path",
+      "mixed-residue"
+    ],
+    "layer_roles": {
+      "Psyche": "private-subjective-continuity",
+      "Thronglets": "shared-sparse-environment",
+      "Oasyce": "low-frequency-authorization-commitment-settlement"
+    },
+    "external_continuity_version": 1
+  },
+  "stack_signals": {
+    "psyche": {
+      "boundary_delta": 0.0,
+      "prediction_error": 0.04342029648800937,
+      "trajectory_kind": null,
+      "issue_count": 0
+    },
+    "thronglets": {
+      "false_signal_pressure": 1.0,
+      "cross_space_contamination_rate": 0.0,
+      "recoverable_spaces_24h": 0,
+      "active_spaces_24h": 1,
+      "substrate_activity": "active"
+    }
+  },
+  "protocol_eval": {
+    "recommended_labels": [
+      "contamination-spike"
+    ],
+    "label_support": {
+      "quiet-baseline": false,
+      "continuity-stress": false,
+      "contamination-spike": true,
+      "repair-window": false
+    },
+    "selected_label": "contamination-spike",
+    "selected_label_supported": true,
+    "reasons": [
+      "contamination-spike supported by elevated false-signal stickiness or cross-space leach"
+    ],
+    "blocking_reasons": []
+  },
+  "contract_checks": {
+    "passed": true,
+    "failures": []
+  },
+  "calibration_refs": {
+    "calibration.profile": "lab/baselines/calibration.profile.json",
+    "calibration.report": "lab/baselines/calibration.report.json"
+  }
+}

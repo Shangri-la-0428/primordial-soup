@@ -1,0 +1,28 @@
+{
+  "source": "thronglets.eval-emergence",
+  "schema_version": 1,
+  "captured_at": "2026-04-09T22:32:09+00:00",
+  "command": "cargo run -- --data-dir <tempdir> eval-emergence --global --hours 168 --max-sessions 10 --json",
+  "boundary_contract": {},
+  "metrics": {
+    "project_scope": null,
+    "signal_eval": null,
+    "workspace_emergence": {
+      "active_spaces_24h": 0,
+      "global_positive_24h": 0,
+      "global_negative_24h": 0,
+      "false_signal_pressure": 0.0,
+      "false_consensus_spaces_24h": 0,
+      "recoverable_spaces_24h": 0,
+      "cross_space_contamination_rate": 0.0,
+      "space_feedback": {}
+    },
+    "substrate_activity": {
+      "activity": "quiet",
+      "recent_interventions_15m": 0,
+      "last_intervention_tool": null,
+      "last_intervention_kinds": [],
+      "last_intervention_age_ms": null
+    }
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "source": "harness.control",
+  "schema_version": 1,
+  "captured_at": "2026-04-09T19:50:30+00:00",
+  "command": "python3 run.py --harness --harness-json",
+  "boundary_contract": {
+    "identity_primitives": [
+      "principal",
+      "account",
+      "delegate",
+      "session"
+    ],
+    "shared_carriers": [
+      "trace",
+      "signal",
+      "policy",
+      "view"
+    ],
+    "control_dimensions": [
+      "scope",
+      "reversibility",
+      "authority_basis",
+      "corroboration_scope",
+      "risk_posture"
+    ],
+    "signal_kinds": [
+      "recommend",
+      "avoid",
+      "watch",
+      "info"
+    ],
+    "trace_taxonomy": [
+      "coordination",
+      "continuity",
+      "calibration"
+    ],
+    "evidence_states": [
+      "stable-path",
+      "mixed-residue"
+    ],
+    "layer_roles": {
+      "Psyche": "private-subjective-continuity",
+      "Thronglets": "shared-sparse-environment",
+      "Oasyce": "low-frequency-authorization-commitment-settlement"
+    },
+    "external_continuity_version": 1
+  },
+  "metrics": {
+    "verified_retention_turns": 18.0,
+    "wrong_retention_turns": 11.0,
+    "stable_path_precision": 0.619,
+    "method_compliance": 0.619,
+    "false_signal_suppression": 0.3889,
+    "promoted_turns": 21.0,
+    "collapse_detected": 1.0,
+    "collapse_turn": 8.0,
+    "recovered": 0.0,
+    "undetected_irrecoverable_collapse": 0.0,
+    "diversity_floor": 8.8785,
+    "boundary_stress_peak": 50.0,
+    "false_consensus_events": 0.0,
+    "cross_space_contamination": 0.1572,
+    "local_consensus_precision": 1.0,
+    "local_repair_precision": 0.4,
+    "global_contamination_rate": 0.2971,
+    "repair_signal_balance": 0.63,
+    "shock_survival_with_trace": 943.0,
+    "shock_survival_without_trace": 166.6667,
+    "recovery_turns_with_trace": 25.0,
+    "continuity_survival": 0.5548,
+    "bootstrap_offline_ready": 1.0,
+    "peer_recovery_turn": 4.0,
+    "mixed_residue_resolution_rate": 0.4451,
+    "mixed_residue_engaged": 0.0,
+    "reversible_probe_survival_rate": 0.346,
+    "weak_legacy_veto_rate": 1.0,
+    "strong_model_overreach_rate": 0.0,
+    "capability_conflict_governed": 0.0,
+    "strong_prior_became_stable_path": 0.0,
+    "strong_prior_guard_margin": 0.8873,
+    "weak_legacy_vetoed_reversible_probe": 1.0,
+    "stale_path_overreach": 0.0,
+    "stale_path_overreach_rate": 0.0,
+    "negative_feedback_triggered": 1.0,
+    "negative_feedback_trigger_rate": 1.0,
+    "local_damage_repeat_rate": 0.6522,
+    "risk_posture": 0.4459,
+    "negative_feedback_closed_reversible_probe": 0.0,
+    "negative_feedback_overreach_rate": 0.0,
+    "join_gain": 0.5927,
+    "poison_resistance": 0.7337,
+    "innovation_preservation": 0.782,
+    "capability_conflict_governance": 0.4817,
+    "new_nouns": 0.0
+  }
+}

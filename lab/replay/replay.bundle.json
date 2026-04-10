@@ -1,0 +1,205 @@
+{
+  "bundle_id": "replay-calibrated-v1-20260410T003639+0000",
+  "generated_at": "2026-04-10T00:36:39+00:00",
+  "snapshot_refs": [
+    "lab/baselines/archive/20260410T001516plus0000-2/index.json",
+    "lab/baselines/archive/20260410T001524plus0000/index.json",
+    "lab/baselines/archive/20260410T001524plus0000-2/index.json",
+    "lab/baselines/archive/20260410T001543plus0000/index.json",
+    "lab/baselines/archive/20260410T003628plus0000/index.json"
+  ],
+  "windows": [
+    {
+      "name": "quiet-baseline",
+      "snapshot_id": "20260410T001516plus0000-2",
+      "snapshot_ref": "lab/baselines/archive/20260410T001516plus0000-2/index.json",
+      "stack_signals": {
+        "psyche": {
+          "boundary_delta": 0.0,
+          "prediction_error": 0.04342029648800937,
+          "trajectory_kind": null,
+          "issue_count": 0
+        },
+        "thronglets": {
+          "false_signal_pressure": 0.0,
+          "cross_space_contamination_rate": 0.0,
+          "recoverable_spaces_24h": 0,
+          "active_spaces_24h": 0,
+          "substrate_activity": "quiet"
+        }
+      },
+      "axes": {
+        "boundary_fragility": 0.0145,
+        "false_signal_stickiness": 0.0,
+        "cross_space_leach": 0.0,
+        "repair_capacity": 0.0,
+        "continuity_health": 0.2
+      },
+      "harness_overrides": {
+        "collapse_order_floor": 18.087,
+        "collapse_boundary_floor": 18.087,
+        "collapse_recovery_nudge": 0.087,
+        "wrong_signal_decay": 0.56,
+        "false_signal_penalty": 0.32,
+        "cross_space_leakage": 0.06,
+        "space_isolation_strength": 0.94,
+        "local_repair_bias": 0.0,
+        "trace_recovery_bonus": 0.0,
+        "peer_memory_resilience": 0.48,
+        "mixed_residue_bias": 0.14
+      }
+    },
+    {
+      "name": "continuity-stress",
+      "snapshot_id": "20260410T001543plus0000",
+      "snapshot_ref": "lab/baselines/archive/20260410T001543plus0000/index.json",
+      "stack_signals": {
+        "psyche": {
+          "boundary_delta": 0.0,
+          "prediction_error": 0.04342029648800937,
+          "trajectory_kind": null,
+          "issue_count": 0
+        },
+        "thronglets": {
+          "false_signal_pressure": 0.0,
+          "cross_space_contamination_rate": 0.0,
+          "recoverable_spaces_24h": 0,
+          "active_spaces_24h": 0,
+          "substrate_activity": "quiet"
+        }
+      },
+      "axes": {
+        "boundary_fragility": 0.0145,
+        "false_signal_stickiness": 0.0,
+        "cross_space_leach": 0.0,
+        "repair_capacity": 0.0,
+        "continuity_health": 0.2
+      },
+      "harness_overrides": {
+        "collapse_order_floor": 18.087,
+        "collapse_boundary_floor": 18.087,
+        "collapse_recovery_nudge": 0.087,
+        "wrong_signal_decay": 0.56,
+        "false_signal_penalty": 0.32,
+        "cross_space_leakage": 0.06,
+        "space_isolation_strength": 0.94,
+        "local_repair_bias": 0.0,
+        "trace_recovery_bonus": 0.0,
+        "peer_memory_resilience": 0.48,
+        "mixed_residue_bias": 0.14
+      }
+    },
+    {
+      "name": "contamination-spike",
+      "snapshot_id": "20260410T003628plus0000",
+      "snapshot_ref": "lab/baselines/archive/20260410T003628plus0000/index.json",
+      "stack_signals": {
+        "psyche": {
+          "boundary_delta": 0.0,
+          "prediction_error": 0.04342029648800937,
+          "trajectory_kind": null,
+          "issue_count": 0
+        },
+        "thronglets": {
+          "false_signal_pressure": 1.0,
+          "cross_space_contamination_rate": 0.0,
+          "recoverable_spaces_24h": 0,
+          "active_spaces_24h": 1,
+          "substrate_activity": "active"
+        }
+      },
+      "axes": {
+        "boundary_fragility": 0.0145,
+        "false_signal_stickiness": 1.0,
+        "cross_space_leach": 0.0,
+        "repair_capacity": 0.0,
+        "continuity_health": 0.8
+      },
+      "harness_overrides": {
+        "collapse_order_floor": 18.087,
+        "collapse_boundary_floor": 18.087,
+        "collapse_recovery_nudge": 0.087,
+        "wrong_signal_decay": 0.86,
+        "false_signal_penalty": 0.82,
+        "cross_space_leakage": 0.06,
+        "space_isolation_strength": 0.94,
+        "local_repair_bias": 0.0,
+        "trace_recovery_bonus": 0.0,
+        "peer_memory_resilience": 0.6,
+        "mixed_residue_bias": 0.26
+      }
+    },
+    {
+      "name": "repair-window",
+      "snapshot_id": "20260410T001524plus0000-2",
+      "snapshot_ref": "lab/baselines/archive/20260410T001524plus0000-2/index.json",
+      "stack_signals": {
+        "psyche": {
+          "boundary_delta": 0.0,
+          "prediction_error": 0.04342029648800937,
+          "trajectory_kind": null,
+          "issue_count": 0
+        },
+        "thronglets": {
+          "false_signal_pressure": 0.0,
+          "cross_space_contamination_rate": 0.0,
+          "recoverable_spaces_24h": 0,
+          "active_spaces_24h": 0,
+          "substrate_activity": "quiet"
+        }
+      },
+      "axes": {
+        "boundary_fragility": 0.0145,
+        "false_signal_stickiness": 0.0,
+        "cross_space_leach": 0.0,
+        "repair_capacity": 0.0,
+        "continuity_health": 0.2
+      },
+      "harness_overrides": {
+        "collapse_order_floor": 18.087,
+        "collapse_boundary_floor": 18.087,
+        "collapse_recovery_nudge": 0.087,
+        "wrong_signal_decay": 0.56,
+        "false_signal_penalty": 0.32,
+        "cross_space_leakage": 0.06,
+        "space_isolation_strength": 0.94,
+        "local_repair_bias": 0.0,
+        "trace_recovery_bonus": 0.0,
+        "peer_memory_resilience": 0.48,
+        "mixed_residue_bias": 0.14
+      }
+    }
+  ],
+  "replay_ready": false,
+  "diversity_score": 0.32,
+  "window_coverage": {
+    "windows": {
+      "quiet-baseline": "20260410T001516plus0000-2",
+      "continuity-stress": "20260410T001543plus0000",
+      "contamination-spike": "20260410T003628plus0000",
+      "repair-window": "20260410T001524plus0000-2"
+    },
+    "unique_snapshot_count": 4,
+    "unique_snapshot_ids": [
+      "20260410T001516plus0000-2",
+      "20260410T001524plus0000-2",
+      "20260410T001543plus0000",
+      "20260410T003628plus0000"
+    ],
+    "recent_snapshot_count": 5,
+    "selection_modes": {
+      "quiet-baseline": "heuristic",
+      "continuity-stress": "label-unsupported",
+      "contamination-spike": "label-supported",
+      "repair-window": "label-unsupported"
+    }
+  },
+  "blocking_reasons": [
+    "missing labeled replay windows: quiet-baseline",
+    "labeled replay windows not supported by protocol: continuity-stress, repair-window",
+    "selected label 'continuity-stress' is not supported by current replay protocol evaluation",
+    "selected label 'repair-window' is not supported by current replay protocol evaluation",
+    "quiet-baseline selected by heuristic fallback because no labeled snapshot exists"
+  ],
+  "schema_version": 1
+}
