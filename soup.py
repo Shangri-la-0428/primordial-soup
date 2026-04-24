@@ -257,26 +257,30 @@ class SignalTrace:
 
 @dataclass
 class LocalPerception:
-    nearby_resources: list[tuple[Pos, float]]   # (position, amount)
-    nearby_deposits: list[tuple[Pos, float]]    # rich deposits (need cooperation)
+    nearby_resources: list[tuple[Pos, float, int]]   # (position, amount, kind_id)
+    nearby_deposits: list[tuple[Pos, float, int]]    # (position, amount, kind_id) — rich, need cooperation
     nearby_signals: list[SignalTrace]
-    nearby_cells: list[str]                     # sigil_ids
-    bonded_neighbors: list[str]                 # subset in bonds
+    nearby_cells: list[str]                          # sigil_ids
+    bonded_neighbors: list[str]                      # subset in bonds
 
 
 class Environment:
     def __init__(self, width: int, height: int, resource_rate: float,
                  resource_range: tuple[float, float] = (5.0, 15.0),
                  deposit_ratio: float = 0.2,
-                 deposit_range: tuple[float, float] = (40.0, 80.0)):
+                 deposit_range: tuple[float, float] = (40.0, 80.0),
+                 signal_kind_count: int = 1):
         self.width = width
         self.height = height
         self.resource_rate = resource_rate
         self.resource_range = resource_range
         self.deposit_ratio = deposit_ratio
         self.deposit_range = deposit_range
+        self.signal_kind_count = max(1, signal_kind_count)
         self.resources: dict[Pos, float] = {}
         self.deposits: dict[Pos, float] = {}  # rich: need 2+ bonded cells
+        self.resource_kinds: dict[Pos, int] = {}  # kind_id ∈ [0, K) for each resource pos
+        self.deposit_kinds: dict[Pos, int] = {}
         self.signals: list[SignalTrace] = []
 
     def spawn_resources(self) -> None:
@@ -284,12 +288,16 @@ class Environment:
             for y in range(self.height):
                 if random.random() < self.resource_rate:
                     pos = (x, y)
+                    kid = random.randrange(self.signal_kind_count)
                     if random.random() < self.deposit_ratio:
                         amt = random.uniform(*self.deposit_range)
                         self.deposits[pos] = self.deposits.get(pos, 0) + amt
+                        # Keep existing kind if already present (rare), else assign
+                        self.deposit_kinds.setdefault(pos, kid)
                     else:
                         amt = random.uniform(*self.resource_range)
                         self.resources[pos] = self.resources.get(pos, 0) + amt
+                        self.resource_kinds.setdefault(pos, kid)
 
     def decay_signals(self) -> None:
         for s in self.signals:
@@ -319,9 +327,9 @@ class Environment:
                 ny = (pos[1] + dy) % self.height
                 npos = (nx, ny)
                 if npos in self.resources:
-                    nearby_res.append((npos, self.resources[npos]))
+                    nearby_res.append((npos, self.resources[npos], self.resource_kinds.get(npos, 0)))
                 if npos in self.deposits:
-                    nearby_dep.append((npos, self.deposits[npos]))
+                    nearby_dep.append((npos, self.deposits[npos], self.deposit_kinds.get(npos, 0)))
 
         for s in self.signals:
             if self._dist(pos, s.position) <= radius:
@@ -341,14 +349,16 @@ class Environment:
             bonded_neighbors=bonded_near,
         )
 
-    def consume_resource(self, pos: Pos) -> float:
+    def consume_resource(self, pos: Pos) -> tuple[float, int]:
         amt = self.resources.pop(pos, 0.0)
-        return amt
+        kid = self.resource_kinds.pop(pos, 0)
+        return amt, kid
 
-    def consume_deposit(self, pos: Pos) -> float:
+    def consume_deposit(self, pos: Pos) -> tuple[float, int]:
         """Rich deposit — caller must verify cooperation requirement."""
         amt = self.deposits.pop(pos, 0.0)
-        return amt
+        kid = self.deposit_kinds.pop(pos, 0)
+        return amt, kid
 
     def add_signal(self, pos: Pos, emitter_id: str,
                    kind: str, payload: Pos | None = None,
@@ -364,12 +374,25 @@ class Environment:
             kind=kind, payload=payload, strength=strength,
         ))
 
-    def reinforce_at(self, pos: Pos) -> None:
-        """Reinforce signals near pos — called when cell uses signal info successfully."""
+    def reinforce_at(self, pos: Pos, kind_filter: str | None = None) -> None:
+        """Reinforce signals near pos — called when cell uses signal info successfully.
+        When kind_filter is set (e.g. 'resource_0'), only matching signals reinforce.
+        This is the mechanism that fragments stigmergy when signal_kind_count > 1."""
         for s in self.signals:
             if self._dist(pos, s.position) <= 2:
+                if kind_filter is not None and s.kind != kind_filter:
+                    continue
                 s.strength = min(s.strength + 0.3, 5.0)
                 s.reinforcements += 1
+
+    def weaken_at(self, pos: Pos, kind_filter: str | None = None) -> None:
+        """Weaken signals near pos — called when signal info is proven wrong."""
+        for s in self.signals:
+            if self._dist(pos, s.position) <= 2:
+                if kind_filter is not None and s.kind != kind_filter:
+                    continue
+                s.strength *= 0.5
+                s.reinforcements = max(0, s.reinforcements - 1)
 
     def _dist(self, a: Pos, b: Pos) -> int:
         dx = min(abs(a[0] - b[0]), self.width - abs(a[0] - b[0]))
@@ -385,12 +408,16 @@ class Environment:
         """Clear all resources/deposits, respawn normally (no bonus)."""
         self.resources.clear()
         self.deposits.clear()
+        self.resource_kinds.clear()
+        self.deposit_kinds.clear()
         self.spawn_resources()
 
     def shock_famine(self, duration: int = 50) -> int:
         """Returns tick count for famine end. Caller must track."""
         self.resources.clear()
         self.deposits.clear()
+        self.resource_kinds.clear()
+        self.deposit_kinds.clear()
         return duration
 
 
@@ -437,15 +464,18 @@ class RuleEngine:
         targets: dict[str, Any] = {}
 
         # ── Decode incoming signals ──
-        # Signals carry real information: locations the cell can't see
-        resource_tips: list[Pos] = []  # resource locations from signals
-        deposit_tips: list[Pos] = []   # deposit locations from signals
-        bond_requests: list[Pos] = []  # cells seeking bonds
+        # Signals carry real information: locations the cell can't see.
+        # Kind strings now include kind_id (e.g. "resource_0", "deposit_2").
+        # Cells behaviorally treat all resource_* as resources (all food is food),
+        # but stigmergic reinforcement is per-kind (see reinforce_at kind_filter).
+        resource_tips: list[Pos] = []
+        deposit_tips: list[Pos] = []
+        bond_requests: list[Pos] = []
         for s in perception.nearby_signals:
             if s.payload is not None:
-                if s.kind == "resource":
+                if s.kind.startswith("resource"):
                     resource_tips.append(s.payload)
-                elif s.kind == "deposit":
+                elif s.kind.startswith("deposit"):
                     deposit_tips.append(s.payload)
                 elif s.kind == "bond":
                     bond_requests.append(s.payload)
@@ -501,13 +531,13 @@ class RuleEngine:
         has_deposit = bool(perception.nearby_deposits)
         info_value = 0.5 * float(has_deposit) + 0.3 * float(has_resource)
         scores["SIGNAL"] = cell.genome.signal_frequency * (0.1 + info_value) * 0.4
-        # Target encodes what to broadcast (kind, payload)
+        # Target encodes what to broadcast (kind, payload); kind includes kind_id
         if has_deposit:
             best_dep = max(perception.nearby_deposits, key=lambda d: d[1])
-            targets["SIGNAL"] = ("deposit", best_dep[0])
+            targets["SIGNAL"] = (f"deposit_{best_dep[2]}", best_dep[0])
         elif has_resource:
             best_res = max(perception.nearby_resources, key=lambda r: r[1])
-            targets["SIGNAL"] = ("resource", best_res[0])
+            targets["SIGNAL"] = (f"resource_{best_res[2]}", best_res[0])
         else:
             targets["SIGNAL"] = ("bond", cell.position)
 
@@ -598,9 +628,9 @@ class NeuralEngine:
         if action == "SEARCH":
             if perception.nearby_resources:
                 return max(perception.nearby_resources, key=lambda r: r[1])[0]
-            # Check signal tips
+            # Check signal tips (any resource_* kind)
             for s in perception.nearby_signals:
-                if s.kind == "resource" and s.payload:
+                if s.payload and s.kind.startswith("resource"):
                     return s.payload
             return None
         elif action == "HARVEST":
@@ -613,10 +643,10 @@ class NeuralEngine:
         elif action == "SIGNAL":
             if perception.nearby_deposits:
                 best = max(perception.nearby_deposits, key=lambda d: d[1])
-                return ("deposit", best[0])
+                return (f"deposit_{best[2]}", best[0])
             elif perception.nearby_resources:
                 best = max(perception.nearby_resources, key=lambda r: r[1])
-                return ("resource", best[0])
+                return (f"resource_{best[2]}", best[0])
             return ("bond", cell.position)
         return None
 
@@ -652,8 +682,8 @@ class LLMEngine:
     @staticmethod
     def _build_prompt(cell: Cell, perception: LocalPerception,
                       overlay: Overlay) -> str:
-        res = [(p, int(a)) for p, a in perception.nearby_resources[:3]]
-        dep = [(p, int(a)) for p, a in perception.nearby_deposits[:2]]
+        res = [(r[0], int(r[1])) for r in perception.nearby_resources[:3]]
+        dep = [(d[0], int(d[1])) for d in perception.nearby_deposits[:2]]
         sigs = [f"{s.kind}@{s.payload}" for s in perception.nearby_signals[:3]
                 if s.payload]
         neighbors = len(perception.nearby_cells)
@@ -709,10 +739,10 @@ class LLMEngine:
         elif action == "SIGNAL":
             if perception.nearby_deposits:
                 best = max(perception.nearby_deposits, key=lambda d: d[1])
-                target = ("deposit", best[0])
+                target = (f"deposit_{best[2]}", best[0])
             elif perception.nearby_resources:
                 best = max(perception.nearby_resources, key=lambda r: r[1])
-                target = ("resource", best[0])
+                target = (f"resource_{best[2]}", best[0])
             else:
                 target = ("bond", cell.position)
         elif action == "HARVEST":
@@ -1036,6 +1066,8 @@ class SimConfig:
     mode_name: str = "rule"
     output_name: str | None = None
     ablate_psyche: bool = False  # fix Psyche at baseline (50,50,50,50)
+    negative_feedback: bool = False  # weaken signals when proven wrong
+    signal_kind_count: int = 1  # K: resources/deposits split into K kinds; stigmergy only reinforces within-kind
 
 
 class Simulation:
@@ -1044,6 +1076,7 @@ class Simulation:
         self.env = Environment(
             config.width, config.height,
             config.resource_rate, config.resource_range,
+            signal_kind_count=config.signal_kind_count,
         )
         self.rule_engine = RuleEngine()
         self.neural_engine = NeuralEngine()
@@ -1200,23 +1233,26 @@ class Simulation:
             if target is not None:
                 if target in self.env.resources:
                     cell.position = target
-                    gained = self.env.consume_resource(target)
+                    gained, kid = self.env.consume_resource(target)
                     gained *= (0.8 + 0.4 * apt)
                     cell.energy += gained
-                    self.env.reinforce_at(target)  # stigmergy: success reinforces nearby signals
+                    self.env.reinforce_at(target, kind_filter=f"resource_{kid}")
                     return "SEARCH_OK"
                 else:
                     cell.position = self._step_toward(cell.position, target)
-                    gained = self.env.consume_resource(cell.position)
+                    gained, kid = self.env.consume_resource(cell.position)
                     if gained > 0:
                         gained *= (0.8 + 0.4 * apt)
                         cell.energy += gained
-                        self.env.reinforce_at(cell.position)
+                        self.env.reinforce_at(cell.position, kind_filter=f"resource_{kid}")
                         return "SEARCH_OK"
+                    # Arrived at target, nothing there → signal was wrong
+                    if self.config.negative_feedback and cell.position == target:
+                        self.env.weaken_at(target)
                     return "SEARCH_FAIL"
             else:
                 cell.position = self.env.adjacent(cell.position)
-                gained = self.env.consume_resource(cell.position)
+                gained, kid = self.env.consume_resource(cell.position)
                 if gained > 0:
                     gained *= (0.8 + 0.4 * apt)
                     cell.energy += gained
@@ -1236,7 +1272,7 @@ class Simulation:
                             has_partner = True
                             break
                 if has_partner:
-                    gained = self.env.consume_deposit(target)
+                    gained, kid = self.env.consume_deposit(target)
                     share = gained / 2
                     cell.energy += share
                     for bid in cell.bonds:
@@ -1244,7 +1280,7 @@ class Simulation:
                             if self.env._dist(self.cells[bid].position, target) <= 1:
                                 self.cells[bid].energy += share
                                 break
-                    self.env.reinforce_at(target)  # stigmergy: deposit success
+                    self.env.reinforce_at(target, kind_filter=f"deposit_{kid}")
                     return "HARVEST_OK"
                 else:
                     return "HARVEST_FAIL"
